@@ -23,7 +23,7 @@ module.exports = {
         host: '0.0.0.0',
         compress: true,
         hot: true,
-        port: 3000,
+        port: 3001,
         publicPath: '/',
     },
     devtool: 'source-map',
