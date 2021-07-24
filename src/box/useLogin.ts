@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction, Reducer } from 'react';
 
 import uuid from 'uuid';
 
-import { User, LoginAction, BroadcastType } from '../types';
+import { User, LoginAction } from '../types';
 import openWindowHandler from '../handlers/openWindowHandler';
 import broadcastChannelHandler from '../handlers/broadcastChannelHandler';
 
@@ -26,19 +26,16 @@ const useLogin = (): { user: User; login: () => void } => {
             return;
         }
 
-        const broadcastChannel = broadcastChannelHandler(BroadcastType.CREATE, { messageId: loginId });
+        const { broadcastChannel, receiveData } = broadcastChannelHandler(loginId);
 
         const openedWindow = openWindowHandler(`http://localhost:3001/callback?state=${loginId}`, 750, 750, () => {
             setIsOpenedWindow(false);
             broadcastChannel.close();
         });
 
-        broadcastChannelHandler(BroadcastType.RECEIVE, {
-            broadcastChannel,
-            onMessage: (user) => {
-                console.log(user);
-                openedWindow.close();
-            },
+        receiveData((user) => {
+            console.log(user);
+            openedWindow.close();
         });
 
         setIsOpenedWindow(true);

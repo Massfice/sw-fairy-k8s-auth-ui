@@ -1,71 +1,25 @@
-import { User, BroadcastType as Type } from '../types';
-
-const typeHandlers = {
-    [Type.SEND]: (
-        messageId?: string,
-        broadcastChannel?: BroadcastChannel,
-        onMessage?: (user: User) => void,
-        data?: User,
-    ): BroadcastChannel => {
-        if (!broadcastChannel) {
-            throw new Error('Incorrect broadcast channel');
-        }
-
-        if (!data) {
-            throw new Error('Incorrect data');
-        }
-
-        broadcastChannel.postMessage(data);
-
-        broadcastChannel.close();
-
-        return broadcastChannel;
-    },
-
-    [Type.RECEIVE]: (
-        messageId?: string,
-        broadcastChannel?: BroadcastChannel,
-        onMessage?: (user: User) => void,
-    ): BroadcastChannel => {
-        if (!broadcastChannel) {
-            throw new Error('Incorrect broadcast channel');
-        }
-
-        if (!onMessage) {
-            throw new Error('Incorrect message handler');
-        }
-
-        broadcastChannel.onmessage = (ev: MessageEvent<User>) => onMessage(ev.data);
-
-        return broadcastChannel;
-    },
-
-    [Type.CREATE]: (messageId?: string): BroadcastChannel => {
-        if (!messageId) {
-            throw new Error('Incorect message Id');
-        }
-
-        return new BroadcastChannel(messageId);
-    },
-};
+import { User } from '../types';
 
 const broadcastChannelHandler = (
-    type: Type,
-    {
-        messageId = null,
-        broadcastChannel = null,
-        onMessage = null,
-        data = null,
-    }: {
-        messageId?: string;
-        broadcastChannel?: BroadcastChannel;
-        onMessage?: (user: User) => void;
-        data?: User;
-    },
-): BroadcastChannel => {
-    const handler = typeHandlers[type];
+    messageId: string,
+): {
+    broadcastChannel: BroadcastChannel;
+    sendData: (user: User) => void;
+    receiveData: (onData: (user: User) => void) => void;
+} => {
+    const broadcastChannel = new BroadcastChannel(messageId);
 
-    return handler(messageId, broadcastChannel, onMessage, data);
+    const sendData = (user: User): void => {
+        broadcastChannel.postMessage(user);
+
+        broadcastChannel.close();
+    };
+
+    const receiveData = (onData: (user: User) => void): void => {
+        broadcastChannel.onmessage = (ev: MessageEvent<User>) => onData(ev.data);
+    };
+
+    return { broadcastChannel, sendData, receiveData };
 };
 
 export default broadcastChannelHandler;
