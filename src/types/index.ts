@@ -1,5 +1,5 @@
 import User from './User';
-import LoginAction from './LoginAction';
-import BroadcastType from './BroadcastType';
+import AuthorizeRequestQuery from './AuthorizeRequestQuery';
+import NotifyHandler from './NotifyHandler';
 
-export { User, LoginAction, BroadcastType };
+export { User, AuthorizeRequestQuery, NotifyHandler };

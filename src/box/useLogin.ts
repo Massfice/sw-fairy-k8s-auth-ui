@@ -1,27 +1,17 @@
-import { useReducer, useState, useEffect } from 'react';
-import { Dispatch, SetStateAction, Reducer } from 'react';
+import { useState, useEffect } from 'react';
 
 import uuid from 'uuid';
 
-import { User, LoginAction } from '../types';
+import { User, AuthorizeRequestQuery } from '../types';
 import openWindowHandler from '../handlers/openWindowHandler';
 import broadcastChannelHandler from '../handlers/broadcastChannelHandler';
 import createUrlHandler from '../handlers/createUrlHandler';
-import AuthorizeRequestQuery from '../types/AuthorizeRequestQuery';
+import useNotify from '../hooks/useNotify';
 
-const reducer: React.Reducer<User, LoginAction> = (prevUser) => {
-    return prevUser;
-};
-
-const useLogin = (): { user: User; login: () => void } => {
-    const [loginId, setLoginId]: [string, Dispatch<SetStateAction<string>>] = useState<string>(null);
-    const [isOpenedWindow, setIsOpenedWindow]: [boolean, Dispatch<SetStateAction<boolean>>] = useState<boolean>(false);
-
-    const [user]: [User, Dispatch<LoginAction>] = useReducer<Reducer<User, LoginAction>, User>(
-        reducer,
-        { isLogged: false },
-        (user) => user,
-    );
+const useLogin = ({ onUserChange }: { onUserChange: (user: User) => void }): { login: () => void } => {
+    const [loginId, setLoginId] = useState<string>(null);
+    const [isOpenedWindow, setIsOpenedWindow] = useState<boolean>(false);
+    const [user, setUser] = useState<User>({ isLogged: false });
 
     useEffect(() => {
         if (!loginId) {
@@ -33,7 +23,7 @@ const useLogin = (): { user: User; login: () => void } => {
         const query: AuthorizeRequestQuery = {
             response_type: 'code',
             client_id: 'ixIHAKVHg7ksQveRimdvsphtOdkVAbSh',
-            redirect_uri: 'http://localhost:3001/callback',
+            redirect_uri: `${window.location.origin}/callback`,
             scope: 'profile email openid offline_access',
             state: loginId,
         };
@@ -46,12 +36,19 @@ const useLogin = (): { user: User; login: () => void } => {
         });
 
         receiveData((user) => {
-            console.log(user);
+            setUser(user);
             openedWindow.close();
         });
 
         setIsOpenedWindow(true);
     }, [loginId]);
+
+    useNotify<User>([
+        {
+            dependency: user,
+            notify: onUserChange,
+        },
+    ]);
 
     const login = () => {
         if (isOpenedWindow || user.isLogged) {
@@ -63,7 +60,7 @@ const useLogin = (): { user: User; login: () => void } => {
         setLoginId(loginId);
     };
 
-    return { login, user };
+    return { login };
 };
 
 export default useLogin;
