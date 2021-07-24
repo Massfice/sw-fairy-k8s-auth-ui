@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import ReactDom from 'react-dom';
+import { BrowserRouter, Route } from 'react-router-dom';
+
+import { CallbackPage } from './box';
 
 const App = (): JSX.Element => {
-    const [test, setTest] = useState(false);
-
-    const click = () => {
-        setTest(true);
-    };
-
     return (
-        <div>
-            {test && <div>My awsome App!</div>}
-            <button onClick={click}>Button</button>
-        </div>
+        <BrowserRouter>
+            <Route path='/' exact>
+                <button>Login</button>
+            </Route>
+            <Route path='/callback'>
+                <CallbackPage />
+            </Route>
+        </BrowserRouter>
     );
 };
 
