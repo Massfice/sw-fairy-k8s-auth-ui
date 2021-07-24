@@ -25,13 +25,25 @@ const useLogin = (): { user: User; login: () => void } => {
             return;
         }
 
-        openWindowHandler('https://google.com', 750, 750, () => setIsOpenedWindow(false));
+        const broadcastChannel = new BroadcastChannel(loginId);
+
+        const openedWindow = openWindowHandler(`http://localhost:3001/callback?state=${loginId}`, 750, 750, () => {
+            setIsOpenedWindow(false);
+            broadcastChannel.close();
+        });
+
+        broadcastChannel.onmessage = (ev: MessageEvent<User>) => {
+            const user: User = ev.data;
+
+            console.log(user);
+            openedWindow.close();
+        };
 
         setIsOpenedWindow(true);
     }, [loginId]);
 
     const login = () => {
-        if (isOpenedWindow) {
+        if (isOpenedWindow || user.isLogged) {
             return;
         }
 

@@ -4,7 +4,7 @@ const openWindowHandler = (
     height: number,
     onClose: () => void,
     props: Record<string, unknown> = { resizable: true, scrollbars: 'yes', status: 'yes' },
-): void => {
+): Window => {
     props.width = width;
     props.height = height;
     props.left = screen.width / 2 - width / 2;
@@ -24,6 +24,8 @@ const openWindowHandler = (
         clearInterval(interval);
         onClose();
     }, 50);
+
+    return openedWindow;
 };
 
 export default openWindowHandler;
