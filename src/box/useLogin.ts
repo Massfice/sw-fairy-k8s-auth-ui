@@ -1,10 +1,11 @@
-import { useReducer, useEffect, useState } from 'react';
+import { useReducer, useState, useEffect } from 'react';
 import { Dispatch, SetStateAction, Reducer } from 'react';
 
 import uuid from 'uuid';
 
-import { User, LoginAction } from '../types';
+import { User, LoginAction, BroadcastType } from '../types';
 import openWindowHandler from '../handlers/openWindowHandler';
+import broadcastChannelHandler from '../handlers/broadcastChannelHandler';
 
 const reducer: React.Reducer<User, LoginAction> = (prevUser) => {
     return prevUser;
@@ -25,19 +26,20 @@ const useLogin = (): { user: User; login: () => void } => {
             return;
         }
 
-        const broadcastChannel = new BroadcastChannel(loginId);
+        const broadcastChannel = broadcastChannelHandler(BroadcastType.CREATE, { messageId: loginId });
 
         const openedWindow = openWindowHandler(`http://localhost:3001/callback?state=${loginId}`, 750, 750, () => {
             setIsOpenedWindow(false);
             broadcastChannel.close();
         });
 
-        broadcastChannel.onmessage = (ev: MessageEvent<User>) => {
-            const user: User = ev.data;
-
-            console.log(user);
-            openedWindow.close();
-        };
+        broadcastChannelHandler(BroadcastType.RECEIVE, {
+            broadcastChannel,
+            onMessage: (user) => {
+                console.log(user);
+                openedWindow.close();
+            },
+        });
 
         setIsOpenedWindow(true);
     }, [loginId]);
