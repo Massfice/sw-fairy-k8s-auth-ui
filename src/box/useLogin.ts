@@ -6,6 +6,8 @@ import uuid from 'uuid';
 import { User, LoginAction } from '../types';
 import openWindowHandler from '../handlers/openWindowHandler';
 import broadcastChannelHandler from '../handlers/broadcastChannelHandler';
+import createUrlHandler from '../handlers/createUrlHandler';
+import AuthorizeRequestQuery from '../types/AuthorizeRequestQuery';
 
 const reducer: React.Reducer<User, LoginAction> = (prevUser) => {
     return prevUser;
@@ -28,7 +30,17 @@ const useLogin = (): { user: User; login: () => void } => {
 
         const { broadcastChannel, receiveData } = broadcastChannelHandler(loginId);
 
-        const openedWindow = openWindowHandler(`http://localhost:3001/callback?state=${loginId}`, 750, 750, () => {
+        const query: AuthorizeRequestQuery = {
+            response_type: 'code',
+            client_id: 'ixIHAKVHg7ksQveRimdvsphtOdkVAbSh',
+            redirect_uri: 'http://localhost:3001/callback',
+            scope: 'profile email openid offline_access',
+            state: loginId,
+        };
+
+        const url = createUrlHandler('https://dev-9gntu7bd.eu.auth0.com/authorize', query);
+
+        const openedWindow = openWindowHandler(url, 750, 750, () => {
             setIsOpenedWindow(false);
             broadcastChannel.close();
         });

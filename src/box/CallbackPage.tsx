@@ -6,6 +6,7 @@ const CallbackPage = (): JSX.Element => {
     const query = new URLSearchParams(useLocation().search);
 
     const state = query.get('state');
+    const code = query.get('code');
 
     if (!state) {
         return <div></div>;
@@ -21,7 +22,7 @@ const CallbackPage = (): JSX.Element => {
                     nick: 'Jhon',
                     email: 'jhon@gmail.com',
                 },
-                token: state,
+                token: JSON.stringify({ state, code }),
             });
         }, 1000);
     }, []);
