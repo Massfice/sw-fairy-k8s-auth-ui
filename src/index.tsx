@@ -2,13 +2,15 @@ import React from 'react';
 import ReactDom from 'react-dom';
 import { BrowserRouter, Route } from 'react-router-dom';
 
-import { CallbackPage } from './box';
+import { CallbackPage, useLogin } from './box';
 
 const App = (): JSX.Element => {
+    const { login } = useLogin();
+
     return (
         <BrowserRouter>
             <Route path='/' exact>
-                <button>Login</button>
+                <button onClick={login}>Login</button>
             </Route>
             <Route path='/callback'>
                 <CallbackPage />
