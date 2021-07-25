@@ -1,5 +1,5 @@
 import CallbackPage from './CallbackPage';
-import useLogin from './useLogin';
-import * as types from '../types';
+import useAuth from './useAuth';
+import { User } from '../types';
 
-export { CallbackPage, useLogin, types };
+export { CallbackPage, useAuth, User };
