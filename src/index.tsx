@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import ReactDom from 'react-dom';
 import { BrowserRouter, Route } from 'react-router-dom';
 
-import { CallbackPage, useLogin, types } from './box';
+import { CallbackPage, useAuth, types } from './box';
 
 const App = (): JSX.Element => {
     const [user, setUser] = useState<types.User>({ isLogged: false });
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const { login } = useLogin({
+    const { login, logout } = useAuth({
         onUserChange: (user) => setUser(user as types.User),
         onLoadingChange: (isLoading) => setIsLoading(isLoading as boolean),
     });
@@ -17,6 +17,7 @@ const App = (): JSX.Element => {
         <BrowserRouter>
             <Route path='/' exact>
                 <button onClick={login}>Login</button>
+                <button onClick={logout}>Logout</button>
                 {user.isLogged && (
                     <div>
                         {user.data.nick} [{user.data.email}]

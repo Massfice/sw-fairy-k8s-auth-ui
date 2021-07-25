@@ -1,6 +1,6 @@
-import AuthorizeRequestQuery from '../types/AuthorizeRequestQuery';
+import { AuthorizeRequestQuery, LogoutRequestQuery } from '../types';
 
-const createUrlHandler = (url: string, queryParams: AuthorizeRequestQuery): string => {
+const createUrlHandler = (url: string, queryParams: AuthorizeRequestQuery | LogoutRequestQuery): string => {
     const urlQueryParams = Object.keys(queryParams)
         .map((key) => `${key}=${encodeURIComponent(queryParams[key] as string)}`)
         .join('&');
