@@ -1,13 +1,14 @@
 import { useEffect } from 'react';
 import { Dispatch, SetStateAction } from 'react';
 
-import { User } from '../types';
+import { User, MessageType } from '../types';
 
 import broadcastChannelHandler from '../handlers/broadcastChannelHandler';
 import openWindowHandler from '../handlers/openWindowHandler';
 
 const useRedirect = (
     messageId: string,
+    type: MessageType,
     setIsLoading: Dispatch<SetStateAction<boolean>>,
     setIsOpenedWindow: Dispatch<SetStateAction<boolean>>,
     setUser: Dispatch<SetStateAction<User>>,
@@ -20,11 +21,15 @@ const useRedirect = (
 
         setIsLoading(true);
 
-        const { broadcastChannel, receiveData } = broadcastChannelHandler(messageId);
+        const {
+            broadcastChannel,
+            messageId: _messageId,
+            receiveData,
+        } = broadcastChannelHandler({ id: messageId, type });
 
-        const url = constructUrl(messageId);
+        const url = constructUrl(_messageId);
 
-        const openedWindow = openWindowHandler(url, 750, 750, () => {
+        const openedWindow = openWindowHandler(url, screen.width / 2, screen.height / 1.5, () => {
             setIsOpenedWindow(false);
             setIsLoading(false);
             broadcastChannel.close();

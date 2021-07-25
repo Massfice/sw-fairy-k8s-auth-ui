@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import uuid from 'uuid';
 
-import { User, AuthorizeRequestQuery, LogoutRequestQuery, OnChangeType } from '../types';
+import { User, AuthorizeRequestQuery, LogoutRequestQuery, OnChangeType, MessageType } from '../types';
 import useRedirect from '../hooks/useRedirect';
 import useNotify from '../hooks/useNotify';
 import createUrlHandler from '../handlers/createUrlHandler';
@@ -20,7 +20,7 @@ const useLogin = ({
     const [user, setUser] = useState<User>({ isLogged: false });
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    useRedirect(loginId, setIsLoading, setIsOpenedWindow, setUser, (messageId: string) => {
+    useRedirect(loginId, MessageType.LOGIN, setIsLoading, setIsOpenedWindow, setUser, (messageId: string) => {
         const query: AuthorizeRequestQuery = {
             response_type: 'code',
             client_id: 'ixIHAKVHg7ksQveRimdvsphtOdkVAbSh',
@@ -32,7 +32,7 @@ const useLogin = ({
         return createUrlHandler('https://dev-9gntu7bd.eu.auth0.com/authorize', query);
     });
 
-    useRedirect(logoutId, setIsLoading, setIsOpenedWindow, setUser, (messageId) => {
+    useRedirect(logoutId, MessageType.LOGOUT, setIsLoading, setIsOpenedWindow, setUser, (messageId) => {
         const query: LogoutRequestQuery = {
             client_id: 'ixIHAKVHg7ksQveRimdvsphtOdkVAbSh',
             returnTo: `${window.location.origin}/callback?state=${messageId}`,

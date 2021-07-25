@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import ReactDom from 'react-dom';
 import { BrowserRouter, Route } from 'react-router-dom';
 
-import { CallbackPage, useAuth, types } from './box';
+import { CallbackPage, useAuth, User } from './box';
 
 const App = (): JSX.Element => {
-    const [user, setUser] = useState<types.User>({ isLogged: false });
+    const [user, setUser] = useState<User>({ isLogged: false });
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const { login, logout } = useAuth({
-        onUserChange: (user) => setUser(user as types.User),
+        onUserChange: (user) => setUser(user as User),
         onLoadingChange: (isLoading) => setIsLoading(isLoading as boolean),
     });
 
@@ -20,7 +20,7 @@ const App = (): JSX.Element => {
                 <button onClick={logout}>Logout</button>
                 {user.isLogged && (
                     <div>
-                        {user.data.nick} [{user.data.email}]
+                        {user.data.nick} [{user.data.email}] [code: {user.token}]
                     </div>
                 )}
                 {isLoading && <div>Loading...</div>}

@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router';
 import broadcastChannelHandler from '../handlers/broadcastChannelHandler';
+import { MessageType } from '../types';
 
 const CallbackPage = (): JSX.Element => {
     const query = new URLSearchParams(useLocation().search);
@@ -12,22 +13,38 @@ const CallbackPage = (): JSX.Element => {
         return <div></div>;
     }
 
+    const { type } = JSON.parse(window.atob(state));
+
+    const text = {
+        [MessageType.LOGIN]: 'Login',
+        [MessageType.LOGOUT]: 'Logout',
+    };
+
     useEffect(() => {
         setTimeout(() => {
-            const { sendData } = broadcastChannelHandler(state);
+            const { sendData } = broadcastChannelHandler({ id: state });
+
+            const data = {
+                [MessageType.LOGIN]: {
+                    isLogged: true,
+                    data: {
+                        nick: 'Jhon Doe',
+                        email: 'jhon@gmail.com',
+                    },
+                },
+                [MessageType.LOGOUT]: {
+                    isLogged: false,
+                },
+            };
 
             sendData({
-                isLogged: true,
-                data: {
-                    nick: 'Jhon',
-                    email: 'jhon@gmail.com',
-                },
-                token: JSON.stringify({ state, code }),
+                ...data[type],
+                token: code,
             });
         }, 1000);
     }, []);
 
-    return <div>Login success!</div>;
+    return <div>{text[type]} success!</div>;
 };
 
 export default CallbackPage;
