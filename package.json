@@ -17,8 +17,7 @@
   },
   "scripts": {
     "start": "webpack serve --open",
-    "build": "webpack --config webpack.prod.js",
-    "serve": "serve dist -p 3001"
+    "build": "webpack --config webpack.prod.js"
   },
   "browserslist": {
     "production": [
