@@ -1,2 +1,2 @@
-import("./bootsrap");
+import('./bootsrap');
 export {};
