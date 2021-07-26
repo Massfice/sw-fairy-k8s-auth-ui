@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: shinobi-war-fairy-login-ui
-  namespace: default
-  labels:
-    app: shinobi-war-fairy-login-ui
+    name: shinobi-war-fairy-auth-ui
+    namespace: default
+    labels:
+        app: shinobi-war-fairy-auth-ui
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: shinobi-war-fairy-login-ui
-  template:
-    metadata:
-      labels:
-        app: shinobi-war-fairy-login-ui
-    spec:
-      containers:
-        - name: shinobi-war-fairy-login-ui
-          image: registry.digitalocean.com/sw-fairy-k8s/sw-fairy-k8s-login-ui:{{commitId}}
-          ports:
-            - containerPort: 3001
-              name: http
+    replicas: 1
+    selector:
+        matchLabels:
+            app: shinobi-war-fairy-auth-ui
+    template:
+        metadata:
+            labels:
+                app: shinobi-war-fairy-auth-ui
+        spec:
+            containers:
+                - name: shinobi-war-fairy-auth-ui
+                  image: registry.digitalocean.com/sw-fairy-k8s/sw-fairy-k8s-auth-ui:{{commitId}}
+                  ports:
+                      - containerPort: 3001
+                        name: http
