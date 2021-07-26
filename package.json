@@ -36,6 +36,7 @@
     },
     "devDependencies": {
         "@massfice/sw-fairy-common-deploy-scripts": "^1.3.2",
+        "eslint": "^7.31.0",
         "gulp": "^4.0.2",
         "husky": "^7.0.1"
     }
