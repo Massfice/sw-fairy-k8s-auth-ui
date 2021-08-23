@@ -27,23 +27,24 @@ module.exports = {
         ],
     },
     plugins: [
-        // new ModuleFederationPlugin({
-        //     name: 'app1',
-        //     library: { type: 'var', name: 'app1' },
-        //     filename: 'remoteEntry.js',
-        //     exposes: {
-        //         './CounterAppOne': './src/components/CounterAppOne',
-        //     },
-        //     shared: {
-        //         ...deps,
-        //         react: { singleton: true, eager: true, requiredVersion: deps.react },
-        //         'react-dom': {
-        //             singleton: true,
-        //             eager: true,
-        //             requiredVersion: deps['react-dom'],
-        //         },
-        //     },
-        // }),
+        new ModuleFederationPlugin({
+            name: 'app1',
+            library: { type: 'var', name: 'app1' },
+            filename: 'remoteEntry.js',
+            exposes: {
+                './useAuth': './src/hooks/useAuth',
+                './CallbackPage': './src/pages/CallbackPage',
+            },
+            shared: {
+                ...deps,
+                react: { singleton: true, eager: true, requiredVersion: deps.react },
+                'react-dom': {
+                    singleton: true,
+                    eager: true,
+                    requiredVersion: deps['react-dom'],
+                },
+            },
+        }),
         new HtmlWebpackPlugin({
             template: './public/index.html',
         }),
