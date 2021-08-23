@@ -12,7 +12,7 @@ module.exports = {
         historyApiFallback: true,
     },
     output: {
-        publicPath: '/',
+        publicPath: 'auto',
     },
     resolve: {
         extensions: ['.ts', '.tsx', '.js'],
@@ -28,8 +28,8 @@ module.exports = {
     },
     plugins: [
         new ModuleFederationPlugin({
-            name: 'app1',
-            library: { type: 'var', name: 'app1' },
+            name: 'authui',
+            library: { type: 'var', name: 'authui' },
             filename: 'remoteEntry.js',
             exposes: {
                 './useAuth': './src/hooks/useAuth',
