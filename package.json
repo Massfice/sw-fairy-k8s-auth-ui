@@ -1,5 +1,5 @@
 {
-    "name": "auth-ui",
+    "name": "sw-fairy-k8s-auth-ui",
     "version": "1.0.0",
     "description": "Auth UI microfrontend for Shinobi War Fairy project",
     "main": "./src/server.js",
