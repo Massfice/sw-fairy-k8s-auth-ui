@@ -14,7 +14,11 @@ const openWindowHandler = (
         .map((key: string) => `${key}=${props[key]}`)
         .join(',');
 
-    const openedWindow = window.open(url, null, windowProps);
+    const openedWindow = window.open(url, undefined, windowProps);
+
+    if (!openedWindow) {
+        throw new Error('Something wrong with opening window');
+    }
 
     const interval = setInterval(() => {
         if (!openedWindow.closed) {

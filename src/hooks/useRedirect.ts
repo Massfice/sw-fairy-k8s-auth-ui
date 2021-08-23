@@ -1,13 +1,14 @@
 import { useEffect } from 'react';
 import { Dispatch, SetStateAction } from 'react';
 
-import { User, MessageType } from '../types';
+import User from '../types/User';
+import MessageType from '../types/MessageType';
 
 import broadcastChannelHandler from '../handlers/broadcastChannelHandler';
 import openWindowHandler from '../handlers/openWindowHandler';
 
 const useRedirect = (
-    messageId: string,
+    messageId: string | null,
     type: MessageType,
     setIsLoading: Dispatch<SetStateAction<boolean>>,
     setIsOpenedWindow: Dispatch<SetStateAction<boolean>>,

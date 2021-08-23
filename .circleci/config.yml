@@ -15,6 +15,9 @@ jobs:
             - kubernetes/install-kubectl
             - run: sudo npm i gulp-cli -g
             - run: npm i @massfice/sw-fairy-common-deploy-scripts typescript --save
+            - run: npm cache clean -f
+            - run: sudo npm install -g n
+            - run: sudo n latest
             - run: gulp deploy --commit $CIRCLE_SHA1 --dtoken $DOCKER_TOKEN --ktoken $KUBE_TOKEN
 workflows:
     version: 2

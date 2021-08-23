@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import ReactDom from 'react-dom';
 import { BrowserRouter, Route } from 'react-router-dom';
-
-import { CallbackPage, useAuth, User } from './box';
+import useAuth from './hooks/useAuth';
+import CallbackPage from './pages/CallbackPage';
+import User from './types/User';
 
 const App = (): JSX.Element => {
     const [user, setUser] = useState<User>({ isLogged: false });
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const { login, logout } = useAuth({
-        onUserChange: (user) => setUser(user as User),
-        onLoadingChange: (isLoading) => setIsLoading(isLoading as boolean),
+        onUserChange: (user) => setUser(user),
+        onLoadingChange: (isLoading) => setIsLoading(isLoading),
     });
 
     return (
@@ -18,7 +18,7 @@ const App = (): JSX.Element => {
             <Route path='/' exact>
                 <button onClick={login}>Login</button>
                 <button onClick={logout}>Logout</button>
-                {user.isLogged && (
+                {user.isLogged && user.data && (
                     <div>
                         {user.data.nick} [{user.data.email}] [code: {user.token}]
                     </div>
@@ -32,4 +32,4 @@ const App = (): JSX.Element => {
     );
 };
 
-ReactDom.render(<App />, document.getElementById('app') as HTMLElement);
+export default App;

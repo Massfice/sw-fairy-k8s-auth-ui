@@ -1,4 +1,5 @@
-import { User, MessageType } from '../types';
+import User from '../types/User';
+import MessageType from '../types/MessageType';
 
 const broadcastChannelHandler = ({
     id,

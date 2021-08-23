@@ -5,6 +5,6 @@ interface UserData {
 
 export default interface User {
     data?: UserData;
-    token?: string;
+    token?: string | null;
     isLogged: boolean;
 }

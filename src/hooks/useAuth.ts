@@ -1,21 +1,25 @@
 import { useState } from 'react';
 
-import uuid from 'uuid';
+import { v4 } from 'uuid';
 
-import { User, AuthorizeRequestQuery, LogoutRequestQuery, OnChangeType, MessageType } from '../types';
+import User from '../types/User';
+import MessageType from '../types/MessageType';
+import AuthorizeRequestQuery from '../types/AuthorizeRequestQuery';
+import LogoutRequestQuery from '../types/LogoutRequestQuery';
+
 import useRedirect from '../hooks/useRedirect';
 import useNotify from '../hooks/useNotify';
 import createUrlHandler from '../handlers/createUrlHandler';
 
-const useLogin = ({
+const useAuth = ({
     onUserChange,
     onLoadingChange,
 }: {
-    onUserChange: (user: OnChangeType) => void;
-    onLoadingChange: (isLoadig: OnChangeType) => void;
+    onUserChange: (user: User) => void;
+    onLoadingChange: (isLoadig: boolean) => void;
 }): { login: () => void; logout: () => void } => {
-    const [loginId, setLoginId] = useState<string>(null);
-    const [logoutId, setLogoutId] = useState<string>(null);
+    const [loginId, setLoginId] = useState<string | null>(null);
+    const [logoutId, setLogoutId] = useState<string | null>(null);
     const [isOpenedWindow, setIsOpenedWindow] = useState<boolean>(false);
     const [user, setUser] = useState<User>({ isLogged: false });
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -41,23 +45,18 @@ const useLogin = ({
         return createUrlHandler('https://dev-9gntu7bd.eu.auth0.com/logout', query);
     });
 
-    useNotify<OnChangeType>([
-        {
-            dependency: user,
-            notify: onUserChange,
-        },
-        {
-            dependency: isLoading,
-            notify: onLoadingChange,
-        },
-    ]);
+    useNotify<User>({ dependency: user, notify: onUserChange });
+    useNotify<boolean>({
+        dependency: isLoading,
+        notify: onLoadingChange,
+    });
 
     const login = (): void => {
         if (isOpenedWindow || user.isLogged) {
             return;
         }
 
-        const loginId = uuid.v4();
+        const loginId = v4();
 
         setLoginId(loginId);
     };
@@ -67,7 +66,7 @@ const useLogin = ({
             return;
         }
 
-        const logoutId = uuid.v4();
+        const logoutId = v4();
 
         setLogoutId(logoutId);
     };
@@ -75,4 +74,4 @@ const useLogin = ({
     return { login, logout };
 };
 
-export default useLogin;
+export default useAuth;

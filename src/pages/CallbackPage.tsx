@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router';
 import broadcastChannelHandler from '../handlers/broadcastChannelHandler';
-import { MessageType } from '../types';
+import MessageType from '../types/MessageType';
 
-const CallbackPage = (): JSX.Element => {
-    const query = new URLSearchParams(useLocation().search);
+const CallbackPage = ({ query }: { query?: URLSearchParams }): JSX.Element => {
+    const _query = query || new URLSearchParams(useLocation().search);
 
-    const state = query.get('state');
-    const code = query.get('code');
+    const state = _query.get('state');
+    const code = _query.get('code');
 
     if (!state) {
         return <div></div>;
@@ -38,13 +38,13 @@ const CallbackPage = (): JSX.Element => {
             };
 
             sendData({
-                ...data[type],
+                ...data[type as MessageType],
                 token: code,
             });
         }, 1000);
     }, []);
 
-    return <div>{text[type]} success!</div>;
+    return <div>{text[type as MessageType]} success!</div>;
 };
 
 export default CallbackPage;

@@ -1,40 +1,61 @@
-const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { ModuleFederationPlugin } = require('webpack').container;
+const path = require('path');
+const deps = require('./package.json').dependencies;
 
-module.exports = {
-    entry: './src/index.tsx',
-    resolve: {
-        extensions: ['.ts', '.tsx', '.js'],
-    },
-    module: {
-        rules: [
-            {
-                test: /\.(ts|tsx)$/,
-                exclude: /node_modules/,
-                use: {
-                    loader: 'babel-loader',
+module.exports = (env, { mode }) => {
+    const config = {
+        entry: ['webpack-dev-server/client?http://0.0.0.0:3001', './src/index.ts'],
+        mode: mode || 'development',
+        devServer: {
+            contentBase: path.join(__dirname, 'dist'),
+            port: 3001,
+            historyApiFallback: true,
+        },
+        output: {
+            publicPath: 'auto',
+        },
+        resolve: {
+            extensions: ['.ts', '.tsx', '.js'],
+        },
+        module: {
+            rules: [
+                {
+                    test: /\.(js|jsx|tsx|ts)$/,
+                    loader: 'ts-loader',
+                    exclude: /node_modules/,
                 },
-            },
+            ],
+        },
+        plugins: [
+            new ModuleFederationPlugin({
+                name: 'authui',
+                library: { type: 'var', name: 'authui' },
+                filename: 'remoteEntry.js',
+                exposes: {
+                    './useAuth': './src/hooks/useAuth',
+                    './CallbackPage': './src/pages/CallbackPage',
+                },
+                shared: {
+                    ...deps,
+                    react: { singleton: true, eager: true, requiredVersion: deps.react },
+                    'react-dom': {
+                        singleton: true,
+                        eager: true,
+                        requiredVersion: deps['react-dom'],
+                    },
+                },
+            }),
         ],
-    },
-    devServer: {
-        contentBase: path.join(__dirname, 'dist'),
-        historyApiFallback: true,
-        host: '0.0.0.0',
-        compress: true,
-        hot: true,
-        port: 3001,
-        publicPath: '/',
-    },
-    devtool: 'source-map',
-    output: {
-        filename: '[name].bundle.js',
-        publicPath: '/',
-        path: path.resolve(__dirname, 'dist'),
-    },
-    plugins: [
-        new HtmlWebpackPlugin({
-            template: path.join(__dirname, 'src', 'index.html'),
-        }),
-    ],
+    };
+
+    if (!mode || mode !== 'production') {
+        config.plugins.push(
+            new HtmlWebpackPlugin({
+                template: './public/index.html',
+            }),
+        );
+    }
+
+    return config;
 };

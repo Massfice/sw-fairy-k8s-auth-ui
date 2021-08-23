@@ -1,10 +1,8 @@
 import { useEffect } from 'react';
-import { NotifyHandler } from '../types';
+import NotifyHandler from '../types/NotifyHandler';
 
-const useNotify = <T>(handlers: NotifyHandler<T>[]): void => {
-    for (const handler of handlers) {
-        useEffect(() => handler.notify(handler.dependency), [handler.dependency]);
-    }
+const useNotify = <T>(handler: NotifyHandler<T>): void => {
+    useEffect(() => handler.notify(handler.dependency), [handler.dependency]);
 };
 
 export default useNotify;
