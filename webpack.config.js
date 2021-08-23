@@ -4,17 +4,15 @@ const path = require('path');
 const deps = require('./package.json').dependencies;
 
 module.exports = {
-    entry: [
-        'webpack-dev-server/client?http://0.0.0.0:3001', // WebpackDevServer host and port
-        './src/index.ts', // Your appʼs entry point
-    ],
+    entry: ['webpack-dev-server/client?http://0.0.0.0:3001', './src/index.ts'],
     mode: 'development',
     devServer: {
         contentBase: path.join(__dirname, 'dist'),
         port: 3001,
+        historyApiFallback: true,
     },
     output: {
-        publicPath: 'http://localhost:3001/',
+        publicPath: '/',
     },
     resolve: {
         extensions: ['.ts', '.tsx', '.js'],
@@ -29,24 +27,23 @@ module.exports = {
         ],
     },
     plugins: [
-        new ModuleFederationPlugin({
-            name: 'app1',
-            library: { type: 'var', name: 'app1' },
-            filename: 'remoteEntry.js',
-            exposes: {
-                // expose each component
-                './CounterAppOne': './src/components/CounterAppOne',
-            },
-            shared: {
-                ...deps,
-                react: { singleton: true, eager: true, requiredVersion: deps.react },
-                'react-dom': {
-                    singleton: true,
-                    eager: true,
-                    requiredVersion: deps['react-dom'],
-                },
-            },
-        }),
+        // new ModuleFederationPlugin({
+        //     name: 'app1',
+        //     library: { type: 'var', name: 'app1' },
+        //     filename: 'remoteEntry.js',
+        //     exposes: {
+        //         './CounterAppOne': './src/components/CounterAppOne',
+        //     },
+        //     shared: {
+        //         ...deps,
+        //         react: { singleton: true, eager: true, requiredVersion: deps.react },
+        //         'react-dom': {
+        //             singleton: true,
+        //             eager: true,
+        //             requiredVersion: deps['react-dom'],
+        //         },
+        //     },
+        // }),
         new HtmlWebpackPlugin({
             template: './public/index.html',
         }),
