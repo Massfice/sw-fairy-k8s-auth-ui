@@ -1,6 +1,8 @@
 {
     "name": "auth-ui",
-    "version": "0.1.0",
+    "version": "1.0.0",
+    "description": "Auth UI microfrontend for Shinobi War Fairy project",
+    "main": "./src/server.js",
     "private": true,
     "dependencies": {
         "@types/node": "^12.0.0",
@@ -27,6 +29,23 @@
         "lint": "eslint src/**/*.ts*",
         "husky:init": "husky install && husky add .husky/pre-commit 'npm run lint'"
     },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Massfice/sw-fairy-k8s-login-ui.git"
+    },
+    "keywords": [
+        "shinobi",
+        "war",
+        "fairy",
+        "login",
+        "ui"
+    ],
+    "author": "Massfice",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/Massfice/sw-fairy-k8s-login-u/issues"
+    },
+    "homepage": "https://github.com/Massfice/sw-fairy-k8s-login-u#readme",
     "browserslist": {
         "production": [
             ">0.2%",

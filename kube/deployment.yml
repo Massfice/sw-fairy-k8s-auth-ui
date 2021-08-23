@@ -14,6 +14,10 @@ spec:
         metadata:
             labels:
                 app: shinobi-war-fairy-auth-ui
+            annotations:
+                dapr.io/enabled: 'true'
+                dapr.io/app-id: 'auth-ui'
+                dapr.io/app-port: '3000'
         spec:
             containers:
                 - name: shinobi-war-fairy-auth-ui
