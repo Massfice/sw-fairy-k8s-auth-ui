@@ -20,8 +20,10 @@
     },
     "scripts": {
         "start": "webpack serve --open",
+        "server:start": "node ./src/server.js",
         "serve": "dapr run --app-id auth-ui --app-port 3001 yarn start",
-        "build": "webpack --config webpack.prod.js",
+        "server:serve": "yarn build && dapr run --app-id auth-ui --app-port 3001 yarn server:start",
+        "build": "webpack --mode=production",
         "lint": "eslint src/**/*.ts*",
         "husky:init": "husky install && husky add .husky/pre-commit 'npm run lint'"
     },
